@@ -16,9 +16,9 @@ A full-stack MERN (MongoDB, Express, React, Node.js) application for learning ab
 ## 🚀 Quick Start (5 Minutes)
 
 ### Prerequisites
-- Node.js v16+
+- Node.js v16+ (tested with v24.13.0)
 - MongoDB (local or MongoDB Atlas)
-- npm or yarn
+- npm v9+ or yarn
 
 ### Installation
 
@@ -26,18 +26,18 @@ A full-stack MERN (MongoDB, Express, React, Node.js) application for learning ab
 # Terminal 1: Backend Setup
 cd backend
 npm install
-cp .env.example .env          # Update with your config
+cp .env.example .env          # Copy environment template
 node seed.js                  # Seed initial data
 npm run dev                   # Runs on http://localhost:5000
 
 # Terminal 2: Frontend Setup
 cd frontend
-npm install
-cp .env.example .env          # Update API URL
+npm install                   # May need --force flag on Windows (see troubleshooting)
+cp .env.example .env          # Copy environment template with API URL
 npm run dev                   # Runs on http://localhost:3000
 ```
 
-Open **http://localhost:3000** in your browser.
+Open **http://localhost:3000** in your browser once both servers are running.
 
 ## 🔐 Test Credentials
 
@@ -147,41 +147,58 @@ npm run dev    # Start dev server
 npm run build  # Build for production
 ```
 
-## 📝 Environment Setup
-
-### Backend (.env)
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/finlearn
-JWT_SECRET=your_secure_secret_key_here
-NODE_ENV=development
-```
-
-### Frontend (.env)
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 **MongoDB Connection Error:**
 - Ensure MongoDB is running locally, or
 - Use MongoDB Atlas cloud service
 - Verify connection string in `.env`
+- For MongoDB Atlas, use: `MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/finlearn`
 
 **Port Already in Use:**
-```bash
-# Windows
+```powershell
+# Windows PowerShell
 Get-Process -Name node | Stop-Process -Force
+
+# Specific ports
+# Kill port 5000 (backend)
+Get-Process -Name node | Where-Object { $_.Handles -eq 5000 } | Stop-Process -Force
+# Kill port 3000 (frontend)
+Get-Process -Name node | Where-Object { $_.Handles -eq 3000 } | Stop-Process -Force
 
 # Mac/Linux
 lsof -ti:3000 | xargs kill -9
+lsof -ti:5000 | xargs kill -9
 ```
 
+**npm Install Issues on Windows (Missing @rollup/rollup-win32-x64-msvc):**
+```powershell
+# Solution 1: Clean reinstall (Recommended)
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+npm cache clean --force
+npm install
+
+# Solution 2: If Solution 1 fails, use --force flag
+npm install --force
+```
+
+**Vite Dev Server Not Starting:**
+- Ensure port 3000 is available
+- If npm scripts don't work, try: `npx vite`
+- Check that node_modules/.bin/vite.cmd exists (Windows)
+
 **Videos Not Loading:**
-- Verify Vimeo is accessible in your region
-- Check console for error messages
-- Hard refresh browser (Ctrl+Shift+R)
+- Verify Vimeo/YouTube is accessible in your region
+- Check browser console (F12) for error messages
+- Hard refresh browser (Ctrl+Shift+R or Cmd+Shift+R)
+- Check Content Security Policy (CSP) headers aren't blocking video embeds
+
+**Backend API Connection Errors:**
+- Verify backend is running on http://localhost:5000
+- Check that CORS is enabled in backend (it is by default)
+- Verify frontend has correct VITE_API_URL in .env
+- Check browser console (F12) for CORS-related errors
 
 ## 🚀 Deployment
 
@@ -236,8 +253,28 @@ This project demonstrates:
 - MongoDB database design
 - Component-based architecture
 
+## 🔧 Environment Files
+
+⚠️ **Important**: Do NOT commit `.env` files to GitHub!
+
+- Copy `.env.example` to `.env` in both backend and frontend folders
+- Update values as needed for your environment
+- `.gitignore` is configured to exclude `.env` files
+
+```bash
+# Backend .env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/finlearn
+JWT_SECRET=your_secure_secret_key_here
+NODE_ENV=development
+
+# Frontend .env
+VITE_API_URL=http://localhost:5000/api
+```
+
 ---
 
 **Status**: ✅ Production Ready  
 **Version**: 1.0.0  
-**Last Updated**: February 25, 2026
+**Last Updated**: February 25, 2026  
+**Tested On**: Node.js v24.13.0, Windows 10/11, MongoDB Local & Atlas
