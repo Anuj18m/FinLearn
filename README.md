@@ -249,29 +249,29 @@ Planned upgrades include:
 # 📸 Screenshots
 
 ## 🏠 Dashboard
-![Dashboard](./screenshots/finlearn-dashboard.png)
+![Dashboard](./Screenshots/finlearn-dashboard.png)
 
 ---
 
 ## 📚 Module Learning Page
-![Module Page](./screenshots/finlearn-video-learning.png)
+![Module Page](./Screenshots/finlearn-video-learning.png)
 
 ---
 
 ## 🧠 Quiz Interface
-![Quiz Interface](./screenshots/finlearn-quiz-interface.png)
+![Quiz Interface](./Screenshots/finlearn-quiz-interface.png)
 
 ---
 
 ## 📊 Analytics Overview
-![Analytics Overview](./screenshots/finlearn-progress-tracker.png)
+![Analytics Overview](./Screenshots/finlearn-progress-tracker.png)
 
 ---
 
 ## 🔐 Authentication Pages
-![Register](./screenshots/finlearn-register.png)
+![Register](./Screenshots/finlearn-register.png)
 
-![Login](./screenshots/finlearn-login.png)
+![Login](./Screenshots/finlearn-login.png)
 
 ---
 
@@ -294,22 +294,6 @@ Fork → Improve → Pull Request 🚀
 * Passionate about scalable application architecture and product engineering.
 
 GitHub: [https://github.com/Anuj18m](https://github.com/Anuj18m)
-
----
-
-# ⭐ Final Note
-
-FinLearn is not just a CRUD tutorial project.
-
-It represents:
-
-* architecture refactoring
-* integration debugging
-* API normalization
-* workflow stabilization
-* production-style engineering practices
-
-built through iterative improvement and real debugging experience.
 
 ---
 
