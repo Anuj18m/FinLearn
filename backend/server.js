@@ -3,10 +3,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
-import moduleRoutes from './routes/modules.js';
-import quizRoutes from './routes/quizzes.js';
+import moduleRoutes from './routes/module.js';
+import quizRoutes from './routes/quiz.js';
 import progressRoutes from './routes/progress.js';
 import { auth } from './middleware/auth.js';
+import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -22,7 +23,6 @@ app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  // Set permissive CSP to allow YouTube embedding and blob scripts
   res.header('Content-Security-Policy', "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.youtube.com https://youtube.com; frame-src 'self' https://www.youtube.com https://youtu.be https://youtube.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;");
   res.header('X-Frame-Options', 'ALLOWALL');
   next();
@@ -30,9 +30,9 @@ app.use((req, res, next) => {
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
+  .then(() => console.log('✅ MongoDB connected successfully'))
   .catch((err) => {
-    console.error('MongoDB connection error:', err);
+    console.error('❌ MongoDB connection error:', err);
     process.exit(1);
   });
 
@@ -47,21 +47,18 @@ app.get('/', (req, res) => {
   res.json({ message: 'FinLearn API is running' });
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
-});
-
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
+// Centralized Error Handling
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
 
 export default app;

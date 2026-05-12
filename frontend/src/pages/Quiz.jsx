@@ -20,7 +20,9 @@ const Quiz = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
 
   useEffect(() => {
-    fetchQuiz();
+    if (moduleId && moduleId !== 'undefined') {
+      fetchQuiz();
+    }
   }, [moduleId]);
 
   const fetchQuiz = async () => {

@@ -17,7 +17,7 @@ const moduleSlice = createSlice({
     },
     fetchModulesSuccess: (state, action) => {
       state.loading = false;
-      state.modules = action.payload;
+      state.modules = action.payload.data;
       state.error = null;
     },
     fetchModulesFailure: (state, action) => {
@@ -25,7 +25,7 @@ const moduleSlice = createSlice({
       state.error = action.payload;
     },
     setCurrentModule: (state, action) => {
-      state.currentModule = action.payload;
+      state.currentModule = action.payload.data;
     }
   }
 });

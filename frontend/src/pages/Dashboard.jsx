@@ -33,57 +33,60 @@ const Dashboard = () => {
   };
 
   const getModuleProgress = (moduleId) => {
-    // This would check if user has completed this module
-    return 0; // Simplified for now
+    const moduleProgress = stats?.activity?.find(a => a.moduleId === moduleId);
+    return moduleProgress ? 100 : 0;
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-12 w-12 rounded-full bg-slate-200 mb-4"></div>
+          <div className="h-4 w-32 bg-slate-200 rounded"></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-cyan-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-slate-50">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Welcome Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-slate-900 mb-1">
             Welcome back, {user?.name}!
           </h1>
-          <p className="text-gray-600">
-            Continue your financial literacy journey
+          <p className="text-slate-500">
+            Monitor your progress and continue your financial literacy journey.
           </p>
         </div>
 
         {/* Stats Section */}
-        {stats && (
-          <div className="grid md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <div className="text-3xl font-bold text-primary mb-2">
-                {stats.totalModulesCompleted}
+        {stats?.overview && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="text-sm font-medium text-slate-500 mb-1">Course Progress</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {stats.overview.completionPercentage}%
               </div>
-              <div className="text-gray-600">Modules Completed</div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <div className="text-3xl font-bold text-primary mb-2">
-                {stats.totalQuizzesTaken}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="text-sm font-medium text-slate-500 mb-1">Modules Completed</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {stats.overview.completedModules}
               </div>
-              <div className="text-gray-600">Quizzes Taken</div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <div className="text-3xl font-bold text-primary mb-2">
-                {stats.averageScore}%
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="text-sm font-medium text-slate-500 mb-1">Average Score</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {stats.overview.averageScore}%
               </div>
-              <div className="text-gray-600">Average Score</div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
-              <div className="text-3xl font-bold text-accent mb-2">
-                {stats.passedQuizzes}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <div className="text-sm font-medium text-slate-500 mb-1">Quizzes Taken</div>
+              <div className="text-3xl font-bold text-slate-900">
+                {stats.overview.totalQuizzesTaken}
               </div>
-              <div className="text-gray-600">Quizzes Passed</div>
             </div>
           </div>
         )}

@@ -19,8 +19,6 @@ const Module = () => {
   const fetchModule = async () => {
     try {
       const data = await moduleService.getModuleBySlug(slug);
-      console.log('Module data fetched:', data);
-      console.log('Video URL:', data?.videoUrl);
       dispatch(setCurrentModule(data));
       setLoading(false);
     } catch (error) {
@@ -73,7 +71,6 @@ const Module = () => {
             <>
               {(() => {
                 const videoEmbed = getVideoEmbedUrl(currentModule.videoUrl);
-                console.log('Rendering video with embed:', videoEmbed);
 
                 // If it's an object (HTML5 video)
                 if (videoEmbed && typeof videoEmbed === 'object') {
