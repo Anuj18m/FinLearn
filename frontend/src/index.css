@@ -2,20 +2,109 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  :root {
+    --background: 240 10% 2%; /* Deep Black */
+    --foreground: 0 0% 98%;
+    --card: 240 10% 4%; /* Near Black Surface */
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 4%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 160 84% 39%; /* Emerald Accent */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 240 6% 10%; /* Subtle Surface */
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 6% 10%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 6% 15%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 6% 12%;
+    --input: 240 6% 12%;
+    --ring: 160 84% 39%;
+    --radius: 0.5rem;
+  }
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  * {
+    @apply border-border outline-none;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased selection:bg-primary/30;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight font-semibold text-foreground;
+  }
+
+  p {
+    @apply text-muted-foreground leading-relaxed;
+  }
+
+  button:active {
+    @apply scale-[0.98] transition-transform;
+  }
 }
 
-#root {
-  min-height: 100vh;
+@layer components {
+  .surface-elevated {
+    @apply bg-card border border-border/50 shadow-sm;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground font-medium px-4 py-2 rounded-md hover:brightness-110 transition-all active:scale-[0.98] disabled:opacity-50 text-sm shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground border border-border/50 font-medium px-4 py-2 rounded-md hover:bg-accent transition-all active:scale-[0.98] disabled:opacity-50 text-sm;
+  }
+
+  .btn-ghost {
+    @apply hover:bg-secondary/50 text-muted-foreground hover:text-foreground transition-all rounded-md px-3 py-2 text-sm font-medium;
+  }
+
+  .input-field {
+    @apply bg-secondary/30 border border-border/50 rounded-md py-2 px-3 text-sm focus:ring-1 focus:ring-primary focus:border-primary transition-all;
+  }
+
+  .card-premium {
+    @apply bg-card border border-border/50 rounded-lg p-6 hover:border-primary/20 transition-all duration-300;
+  }
+}
+
+/* Custom Utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
 }

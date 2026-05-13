@@ -1,5 +1,6 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import * as progressService from '../services/progress.service.js';
+import ApiResponse from '../utils/ApiResponse.js';
 
 /**
  * @desc    Get user statistics and activity snapshot
@@ -8,10 +9,7 @@ import * as progressService from '../services/progress.service.js';
  */
 export const getStats = asyncHandler(async (req, res) => {
   const stats = await progressService.getUserStats(req.userId);
-  res.json({
-    success: true,
-    data: stats
-  });
+  res.json(new ApiResponse(200, stats, 'User stats retrieved successfully'));
 });
 
 /**
@@ -21,10 +19,7 @@ export const getStats = asyncHandler(async (req, res) => {
  */
 export const getProgress = asyncHandler(async (req, res) => {
   const progress = await progressService.getAllUserProgress(req.userId);
-  res.json({
-    success: true,
-    data: progress
-  });
+  res.json(new ApiResponse(200, progress, 'User progress retrieved successfully'));
 });
 
 /**
@@ -34,8 +29,5 @@ export const getProgress = asyncHandler(async (req, res) => {
  */
 export const getModuleProgress = asyncHandler(async (req, res) => {
   const progress = await progressService.getModuleProgress(req.userId, req.params.moduleId);
-  res.json({
-    success: true,
-    data: progress
-  });
+  res.json(new ApiResponse(200, progress, 'Module progress retrieved successfully'));
 });

@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import moduleRoutes from './routes/module.js';
 import quizRoutes from './routes/quiz.js';
 import progressRoutes from './routes/progress.js';
+import adminRoutes from './routes/adminRoutes.js';
 import { auth } from './middleware/auth.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -18,13 +19,18 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Add headers to allow YouTube iframe embeds
+// Debug logger
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  if (req.method === 'POST') console.log('Body:', req.body);
+  next();
+});
+
+// Add headers to allow YouTube iframe embeds and basic API access
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Content-Security-Policy', "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://www.youtube.com https://youtube.com; frame-src 'self' https://www.youtube.com https://youtu.be https://youtube.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;");
-  res.header('X-Frame-Options', 'ALLOWALL');
   next();
 });
 
@@ -40,7 +46,8 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/modules', moduleRoutes);
 app.use('/api/quizzes', quizRoutes);
-app.use('/api/progress', auth, progressRoutes);
+app.use('/api/progress', progressRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/', (req, res) => {

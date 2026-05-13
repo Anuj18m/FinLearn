@@ -44,4 +44,8 @@ const quizSubmissionSchema = new mongoose.Schema({
   }
 });
 
+// Indexes for performance optimization
+quizSubmissionSchema.index({ userId: 1, moduleId: 1 });
+quizSubmissionSchema.index({ moduleId: 1, quizId: 1 });
+
 export default mongoose.model('QuizSubmission', quizSubmissionSchema);

@@ -9,17 +9,32 @@ export const getUserStats = async (userId) => {
   // 1. Get total modules count
   const totalModulesCount = await Module.countDocuments();
   
-  // 2. Get all progress records for the user
-  const userProgress = await Progress.find({ userId });
-  
-  const completedModules = userProgress.filter(p => p.passed).length;
-  const totalQuizzesTaken = userProgress.length;
-  
-  // 3. Calculate metrics
-  const averageScore = userProgress.length > 0 
-    ? Math.round(userProgress.reduce((sum, p) => sum + p.score, 0) / userProgress.length)
-    : 0;
+  // 2. Aggregate progress records for the user
+  const progressStats = await Progress.aggregate([
+    { $match: { userId } },
+    {
+      $group: {
+        _id: null,
+        totalQuizzesTaken: { $sum: 1 },
+        completedModules: {
+          $sum: { $cond: [{ $eq: ['$passed', true] }, 1, 0] }
+        },
+        averageScore: { $avg: '$score' }
+      }
+    }
+  ]);
 
+  const stats = progressStats[0] || {
+    totalQuizzesTaken: 0,
+    completedModules: 0,
+    averageScore: 0
+  };
+
+  const completedModules = stats.completedModules;
+  const totalQuizzesTaken = stats.totalQuizzesTaken;
+  const averageScore = Math.round(stats.averageScore || 0);
+
+  // 3. Calculate metrics
   const completionPercentage = totalModulesCount > 0 
     ? Math.round((completedModules / totalModulesCount) * 100) 
     : 0;

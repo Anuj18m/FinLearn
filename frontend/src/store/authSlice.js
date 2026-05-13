@@ -19,10 +19,10 @@ const authSlice = createSlice({
     loginSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
-      state.user = action.payload.data.user;
-      state.token = action.payload.data.token;
+      state.user = action.payload.user;
+      state.token = action.payload.token;
       state.error = null;
-      localStorage.setItem('token', action.payload.data.token);
+      localStorage.setItem('token', action.payload.token);
     },
     loginFailure: (state, action) => {
       state.loading = false;
@@ -35,10 +35,10 @@ const authSlice = createSlice({
     registerSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
-      state.user = action.payload.data.user;
-      state.token = action.payload.data.token;
+      state.user = action.payload.user;
+      state.token = action.payload.token;
       state.error = null;
-      localStorage.setItem('token', action.payload.data.token);
+      localStorage.setItem('token', action.payload.token);
     },
     registerFailure: (state, action) => {
       state.loading = false;

@@ -29,7 +29,10 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
-    return Promise.reject(error);
+    
+    // Extract the exact error message from the backend ApiResponse structure
+    const backendMessage = error.response?.data?.message || error.message;
+    return Promise.reject(new Error(backendMessage));
   }
 );
 

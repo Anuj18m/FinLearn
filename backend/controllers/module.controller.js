@@ -1,5 +1,6 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import * as moduleService from '../services/module.service.js';
+import ApiResponse from '../utils/ApiResponse.js';
 
 /**
  * @desc    Get all modules
@@ -8,10 +9,7 @@ import * as moduleService from '../services/module.service.js';
  */
 export const getAllModules = asyncHandler(async (req, res) => {
   const modules = await moduleService.getModules();
-  res.json({
-    success: true,
-    data: modules
-  });
+  res.json(new ApiResponse(200, modules, 'Modules retrieved successfully'));
 });
 
 /**
@@ -21,10 +19,7 @@ export const getAllModules = asyncHandler(async (req, res) => {
  */
 export const getModuleBySlug = asyncHandler(async (req, res) => {
   const module = await moduleService.getModuleBySlug(req.params.slug);
-  res.json({
-    success: true,
-    data: module
-  });
+  res.json(new ApiResponse(200, module, 'Module retrieved successfully'));
 });
 
 /**
@@ -34,10 +29,7 @@ export const getModuleBySlug = asyncHandler(async (req, res) => {
  */
 export const createModule = asyncHandler(async (req, res) => {
   const module = await moduleService.createModule(req.body);
-  res.status(201).json({
-    success: true,
-    data: module
-  });
+  res.status(201).json(new ApiResponse(201, module, 'Module created successfully'));
 });
 
 /**
@@ -47,10 +39,7 @@ export const createModule = asyncHandler(async (req, res) => {
  */
 export const updateModule = asyncHandler(async (req, res) => {
   const module = await moduleService.updateModule(req.params.id, req.body);
-  res.json({
-    success: true,
-    data: module
-  });
+  res.json(new ApiResponse(200, module, 'Module updated successfully'));
 });
 
 /**
@@ -60,8 +49,5 @@ export const updateModule = asyncHandler(async (req, res) => {
  */
 export const deleteModule = asyncHandler(async (req, res) => {
   await moduleService.deleteModule(req.params.id);
-  res.json({
-    success: true,
-    message: 'Module deleted successfully'
-  });
+  res.json(new ApiResponse(200, null, 'Module deleted successfully'));
 });

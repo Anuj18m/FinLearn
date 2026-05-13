@@ -4,6 +4,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentModule } from '../store/moduleSlice';
 import { moduleService } from '../services/apiService';
 import { getVideoEmbedUrl } from '../utils/helpers';
+import { 
+  ArrowLeft, 
+  Play, 
+  BookOpen, 
+  GraduationCap, 
+  Clock, 
+  ChevronRight,
+  Sparkles
+} from 'lucide-react';
 
 const Module = () => {
   const { slug } = useParams();
@@ -14,6 +23,7 @@ const Module = () => {
 
   useEffect(() => {
     fetchModule();
+    window.scrollTo(0, 0);
   }, [slug]);
 
   const fetchModule = async () => {
@@ -22,7 +32,7 @@ const Module = () => {
       dispatch(setCurrentModule(data));
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching module:', error);
+      // Silent failure
       setLoading(false);
     }
   };
@@ -33,51 +43,90 @@ const Module = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <div className="max-w-4xl mx-auto py-12 px-6 space-y-12 animate-pulse">
+        <div className="h-8 w-48 bg-secondary/50 rounded-md" />
+        <div className="space-y-4">
+          <div className="h-12 w-3/4 bg-secondary/50 rounded-xl" />
+          <div className="h-6 w-full bg-secondary/30 rounded-lg" />
+        </div>
+        <div className="aspect-video bg-secondary/20 rounded-2xl" />
       </div>
     );
   }
 
   if (!currentModule) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Module not found</div>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-6">
+        <div className="w-16 h-16 bg-secondary/50 rounded-full flex items-center justify-center text-muted-foreground">
+          <BookOpen size={32} />
+        </div>
+        <div className="text-center">
+          <h2 className="text-2xl font-black mb-2">Module not found</h2>
+          <p className="text-muted-foreground">The resource you're looking for might have been moved or deleted.</p>
+        </div>
+        <button onClick={() => navigate('/dashboard')} className="btn-secondary">
+          Return to Workspace
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-cyan-50">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 mb-8">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="text-primary hover:text-secondary mb-4 flex items-center"
-          >
-            ← Back to Dashboard
-          </button>
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+    <div className="max-w-4xl mx-auto py-12 px-6 animate-fade-in space-y-16 pb-24">
+      {/* Breadcrumbs & Header */}
+      <section className="space-y-8">
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors"
+        >
+          <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+          Back to Workspace
+        </button>
+        
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 text-primary text-[10px] font-black uppercase tracking-widest">
+            <Sparkles size={12} />
+            Learning Module
+          </div>
+          <h1 className="text-4xl lg:text-5xl font-black tracking-tight leading-tight">
             {currentModule.title}
           </h1>
-          <p className="text-gray-600 text-lg">{currentModule.description}</p>
+          <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+            {currentModule.description}
+          </p>
         </div>
 
-        {/* Video Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">📹 Watch Video Lesson</h2>
+        <div className="flex items-center gap-6 pt-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
+                <Clock size={14} className="text-primary" />
+                {currentModule.duration}
+            </div>
+            <div className="w-1 h-1 rounded-full bg-border" />
+            <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground">
+                <BookOpen size={14} className="text-primary" />
+                Mastery Track
+            </div>
+        </div>
+      </section>
+
+      {/* Video Lesson Section */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between">
+            <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 border-l-2 border-primary pl-3">Video Workshop</h2>
+            <div className="text-[10px] font-bold text-muted-foreground bg-secondary/50 px-2 py-1 rounded">HD 1080p</div>
+        </div>
+        
+        <div className="relative group bg-zinc-900 rounded-3xl overflow-hidden shadow-2xl border border-border/50 transition-all hover:border-primary/20">
           {currentModule?.videoUrl ? (
             <>
               {(() => {
                 const videoEmbed = getVideoEmbedUrl(currentModule.videoUrl);
 
-                // If it's an object (HTML5 video)
                 if (videoEmbed && typeof videoEmbed === 'object') {
                   return (
-                    <div className="relative w-full bg-gray-100 rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+                    <div className="aspect-video relative">
                       <video
-                        className="absolute top-0 left-0 w-full h-full"
+                        className="w-full h-full object-cover"
                         controls
                         controlsList="nodownload"
                       >
@@ -88,11 +137,10 @@ const Module = () => {
                   );
                 }
 
-                // If it's a string (iframe URL)
                 return videoEmbed ? (
-                  <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+                  <div className="aspect-video relative">
                     <iframe
-                      className="absolute top-0 left-0 w-full h-full border-0"
+                      className="w-full h-full border-0"
                       src={videoEmbed}
                       title={currentModule.title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -100,47 +148,57 @@ const Module = () => {
                     ></iframe>
                   </div>
                 ) : (
-                  <div className="w-full h-64 bg-gray-100 rounded-lg flex flex-col items-center justify-center">
-                    <p className="text-gray-700 font-semibold mb-2">⚠️ Video Unavailable</p>
-                    <p className="text-gray-500 text-sm text-center">
-                      The video for this module cannot be played.<br/>
-                      URL: {currentModule.videoUrl}
-                    </p>
+                  <div className="aspect-video flex flex-col items-center justify-center space-y-4 bg-secondary/20">
+                    <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center text-rose-500">
+                      <Play size={24} className="ml-1" />
+                    </div>
+                    <p className="text-xs font-bold text-muted-foreground">Playback unavailable for this module</p>
                   </div>
                 );
               })()}
             </>
           ) : (
-            <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-              <p className="text-gray-500">No video available for this module</p>
+            <div className="aspect-video flex items-center justify-center bg-secondary/20">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">No video resource provided</p>
             </div>
           )}
         </div>
+      </section>
 
-        {/* Content Section */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Learning Content</h2>
-          <div className="prose max-w-none">
-            <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-              {currentModule.content}
-            </div>
+      {/* Deep Dive Content */}
+      <section className="space-y-8">
+        <h2 className="text-xs font-black uppercase tracking-widest text-muted-foreground/60 border-l-2 border-primary pl-3">Detailed Curriculum</h2>
+        <div className="prose prose-invert max-w-none">
+          <div className="text-muted-foreground leading-relaxed whitespace-pre-line text-lg font-medium selection:bg-primary/20">
+            {currentModule.content}
           </div>
         </div>
+      </section>
 
-        {/* Quiz Button */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Ready to Test Your Knowledge?</h2>
-          <p className="text-gray-600 mb-6">
-            Take the quiz to test your understanding. You need to score at least 80% to pass.
-          </p>
+      {/* Assessment CTA */}
+      <section className="pt-16 border-t border-border/50">
+        <div className="p-12 rounded-[2rem] bg-secondary/10 border border-border/50 relative overflow-hidden group flex flex-col items-center text-center space-y-8">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform">
+             <GraduationCap size={200} />
+          </div>
+          
+          <div className="space-y-4 max-w-lg relative z-10">
+            <h2 className="text-3xl font-black tracking-tight text-foreground">Ready for assessment?</h2>
+            <p className="text-muted-foreground text-sm font-medium">
+              Validate your understanding of <span className="text-foreground font-bold">{currentModule.title}</span>. 
+              A score of <span className="text-primary font-bold">80%</span> or higher is required for certification.
+            </p>
+          </div>
+
           <button
             onClick={handleStartQuiz}
-            className="bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-secondary transition"
+            className="btn-primary py-4 px-12 rounded-full flex items-center gap-3 group relative z-10 shadow-2xl shadow-primary/20"
           >
-            Start Quiz
+            Start Module Assessment
+            <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

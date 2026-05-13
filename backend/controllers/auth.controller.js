@@ -1,5 +1,6 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import * as authService from '../services/auth.service.js';
+import ApiResponse from '../utils/ApiResponse.js';
 
 /**
  * @desc    Register a new user
@@ -8,10 +9,9 @@ import * as authService from '../services/auth.service.js';
  */
 export const register = asyncHandler(async (req, res) => {
   const { user, token } = await authService.registerUser(req.body);
-  res.status(201).json({
-    success: true,
-    data: { user, token }
-  });
+  res.status(201).json(
+    new ApiResponse(201, { user, token }, 'User registered successfully')
+  );
 });
 
 /**
@@ -21,10 +21,9 @@ export const register = asyncHandler(async (req, res) => {
  */
 export const login = asyncHandler(async (req, res) => {
   const { user, token } = await authService.loginUser(req.body);
-  res.json({
-    success: true,
-    data: { user, token }
-  });
+  res.json(
+    new ApiResponse(200, { user, token }, 'Login successful')
+  );
 });
 
 /**
@@ -34,8 +33,7 @@ export const login = asyncHandler(async (req, res) => {
  */
 export const getMe = asyncHandler(async (req, res) => {
   const user = await authService.getUserById(req.userId);
-  res.json({
-    success: true,
-    data: user
-  });
+  res.json(
+    new ApiResponse(200, user, 'User data retrieved successfully')
+  );
 });

@@ -17,7 +17,7 @@ const progressSlice = createSlice({
     },
     fetchProgressSuccess: (state, action) => {
       state.loading = false;
-      state.progress = action.payload.data;
+      state.progress = action.payload || [];
       state.error = null;
     },
     fetchProgressFailure: (state, action) => {
@@ -25,7 +25,7 @@ const progressSlice = createSlice({
       state.error = action.payload;
     },
     fetchStatsSuccess: (state, action) => {
-      state.stats = action.payload.data;
+      state.stats = action.payload;
     }
   }
 });

@@ -17,7 +17,7 @@ const quizSlice = createSlice({
     },
     fetchQuizSuccess: (state, action) => {
       state.loading = false;
-      state.currentQuiz = action.payload.data;
+      state.currentQuiz = action.payload;
       state.error = null;
     },
     fetchQuizFailure: (state, action) => {
@@ -30,7 +30,7 @@ const quizSlice = createSlice({
     },
     submitQuizSuccess: (state, action) => {
       state.loading = false;
-      state.quizResult = action.payload.data;
+      state.quizResult = action.payload;
       state.error = null;
     },
     submitQuizFailure: (state, action) => {

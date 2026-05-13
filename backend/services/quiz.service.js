@@ -76,3 +76,42 @@ export const submitQuizAnswers = async (userId, submissionData) => {
 
   return submission;
 };
+
+/**
+ * Get all quizzes (for admin)
+ */
+export const getAllQuizzes = async () => {
+  return await Quiz.find().populate('moduleId', 'title');
+};
+
+/**
+ * Create a new quiz
+ */
+export const createQuiz = async (quizData) => {
+  const existingQuiz = await Quiz.findOne({ moduleId: quizData.moduleId });
+  if (existingQuiz) {
+    throw new ApiError(400, 'A quiz already exists for this module');
+  }
+  return await Quiz.create(quizData);
+};
+
+/**
+ * Update a quiz
+ */
+export const updateQuiz = async (id, quizData) => {
+  const quiz = await Quiz.findByIdAndUpdate(id, quizData, {
+    new: true,
+    runValidators: true
+  });
+  if (!quiz) throw new ApiError(404, 'Quiz not found');
+  return quiz;
+};
+
+/**
+ * Delete a quiz
+ */
+export const deleteQuiz = async (id) => {
+  const quiz = await Quiz.findByIdAndDelete(id);
+  if (!quiz) throw new ApiError(404, 'Quiz not found');
+  return quiz;
+};
